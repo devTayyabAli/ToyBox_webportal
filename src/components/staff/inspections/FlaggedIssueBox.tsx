@@ -1,0 +1,45 @@
+import { ActionCamera } from "@/components/common/Svgs";
+import { Chip } from "@/components/ui/Chip";
+
+type FlaggedIssueBoxProps = {
+  tag: string;
+  notes: string;
+  onNotesChange?: (value: string) => void;
+  onAddPhoto?: () => void;
+};
+
+export function FlaggedIssueBox({
+  tag,
+  notes,
+  onNotesChange,
+  onAddPhoto,
+}: FlaggedIssueBoxProps) {
+  return (
+    <section className="space-y-4 rounded-xl border border-pink/30 bg-pink/[0.04] p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip label="1 Issue Flagged" context="inline" tone="pink" shape="pill" />
+        <Chip label={tag} context="inline" tone="neutral" shape="pill" />
+      </div>
+
+      <textarea
+        value={notes}
+        onChange={(event) => onNotesChange?.(event.target.value)}
+        readOnly={!onNotesChange}
+        disabled={!onNotesChange}
+        rows={3}
+        className="font-roboto w-full resize-none rounded-xl border border-accent/15 bg-input-muted px-4 py-3 text-[12px] leading-relaxed tracking-[0.02em] text-foreground outline-none transition-colors placeholder:text-secondary/70 focus:border-accent/35 disabled:cursor-default disabled:opacity-80"
+      />
+
+      {onAddPhoto ? (
+        <button
+          type="button"
+          onClick={onAddPhoto}
+          className="font-roboto flex cursor-pointer items-center gap-2 rounded-lg border border-accent/20 bg-card px-4 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
+        >
+          <ActionCamera />
+          Add Photo Evidence
+        </button>
+      ) : null}
+    </section>
+  );
+}

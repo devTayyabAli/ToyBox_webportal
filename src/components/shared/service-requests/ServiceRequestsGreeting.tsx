@@ -1,0 +1,30 @@
+import { StaffShiftMeta } from "@/components/staff/StaffShiftMeta";
+import { ServiceRequestsFilterTabs } from "./ServiceRequestsFilterTabs";
+import type { ServiceRequestFilter } from "./types";
+
+type ServiceRequestsGreetingProps = {
+  activeFilter: ServiceRequestFilter;
+  onFilterChange: (filter: ServiceRequestFilter) => void;
+};
+
+export function ServiceRequestsGreeting({
+  activeFilter,
+  onFilterChange,
+}: ServiceRequestsGreetingProps) {
+  return (
+    <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <div className="space-y-3">
+        <StaffShiftMeta split />
+        <h1 className="font-copperplate text-[36px] leading-tight">
+          <span className="text-foreground">Service </span>
+          <span className="text-primary">Requests</span>
+        </h1>
+      </div>
+
+      {/* <ServiceRequestsFilterTabs
+        active={activeFilter}
+        onChange={onFilterChange}
+      /> */}
+    </div>
+  );
+}

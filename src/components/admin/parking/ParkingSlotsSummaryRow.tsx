@@ -1,0 +1,91 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import {
+  VehicleFleetCar,
+  VehicleFleetInService,
+  VehicleFleetOverdue,
+  VehicleFleetReady,
+} from "@/components/common/Svgs";
+import { adminParkingApi } from "@/api/adminParking.api";
+import { StatCard } from "@/components/staff/overview/StatCard";
+import {
+  createEmptyParkingSlotsSummary,
+  mapParkingSlotsSummary,
+} from "@/lib/staffParkingSlots";
+import type { ParkingSlotsSummaryDisplay } from "./parking-slots/types";
+
+type ParkingSlotsSummaryRowProps = {
+  refreshToken?: number;
+  holdReveal?: boolean;
+  onBootstrapComplete?: () => void;
+};
+
+export function ParkingSlotsSummaryRow({
+  refreshToken = 0,
+  holdReveal = false,
+  onBootstrapComplete,
+}: ParkingSlotsSummaryRowProps) {
+  const [summary, setSummary] = useState<ParkingSlotsSummaryDisplay>(
+    createEmptyParkingSlotsSummary(),
+  );
+  const [loading, setLoading] = useState(true);
+
+  const loadSummary = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const response = await adminParkingApi.getSummary();
+      setSummary(mapParkingSlotsSummary(response.data));
+    } catch {
+      setSummary(createEmptyParkingSlotsSummary());
+    } finally {
+      setLoading(false);
+      onBootstrapComplete?.();
+    }
+  }, [onBootstrapComplete]);
+
+  useEffect(() => {
+    void loadSummary();
+  }, [loadSummary, refreshToken]);
+
+  const valueLoading = loading || holdReveal;
+
+  return (
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+      <StatCard
+        label={summary.total.label}
+        value={summary.total.value}
+        subtext={summary.total.subtext || "ALL PARKING SLOTS"}
+        icon={<VehicleFleetCar />}
+        iconSize="lg"
+        iconFit="native"
+        valueLoading={valueLoading}
+      />
+      <StatCard
+        label={summary.available.label}
+        value={summary.available.value}
+        subtext={summary.available.subtext || "OPEN SLOTS"}
+        icon={<VehicleFleetReady />}
+        iconSize="lg"
+        valueLoading={valueLoading}
+      />
+      <StatCard
+        label={summary.occupied.label}
+        value={summary.occupied.value}
+        subtext={summary.occupied.subtext || "IN USE"}
+        icon={<VehicleFleetInService />}
+        iconSize="lg"
+        valueLoading={valueLoading}
+      />
+      <StatCard
+        label={summary.maintenance.label}
+        value={summary.maintenance.value}
+        subtext={summary.maintenance.subtext || "UNDER MAINTENANCE"}
+        icon={<VehicleFleetOverdue />}
+        iconSize="lg"
+        valueLoading={valueLoading}
+      />
+    </div>
+  );
+}

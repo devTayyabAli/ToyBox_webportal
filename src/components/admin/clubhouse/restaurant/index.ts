@@ -1,0 +1,1 @@
+export { ClubhouseRestaurantDetailPage } from "./ClubhouseRestaurantDetailPage";
