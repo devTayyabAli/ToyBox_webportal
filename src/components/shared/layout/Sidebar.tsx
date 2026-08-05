@@ -249,7 +249,7 @@ function NavSection({
                 </span>
 
                 <span
-                  className={`font-roboto flex-1 text-[13px] tracking-[0.04em] ${
+                  className={`font-roboto flex-1 text-[15px] tracking-[0.04em] ${
                     active ? "font-medium text-[var(--nav-active-fg)]" : "font-normal"
                   }`}
                 >
